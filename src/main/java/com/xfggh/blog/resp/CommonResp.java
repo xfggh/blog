@@ -1,4 +1,4 @@
-package com.xfggh.blog.util;
+package com.xfggh.blog.resp;
 
 public class CommonResp<T> {
     private boolean success = true;
