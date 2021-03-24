@@ -1,6 +1,5 @@
 package com.xfggh.blog.controller;
 
-import com.xfggh.blog.entity.Ebook;
 import com.xfggh.blog.req.EbookReq;
 import com.xfggh.blog.resp.EbookResp;
 import com.xfggh.blog.service.EbookService;
