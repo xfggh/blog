@@ -2,6 +2,7 @@ package com.xfggh.blog.service;
 
 import com.xfggh.blog.entity.Ebook;
 import com.xfggh.blog.mapper.EbookMapper;
+import com.xfggh.blog.util.CommonResp;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,7 +13,10 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public List<Ebook> list(){
-        return ebookMapper.selectByExample(null);
+    public CommonResp<List<Ebook>> list(){
+        CommonResp resp = new CommonResp();
+        resp.setMessage("查询列表成功");
+        resp.setContent(ebookMapper.selectByExample(null));
+        return resp;
     }
 }
