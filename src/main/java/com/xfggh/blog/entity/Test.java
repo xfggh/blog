@@ -5,6 +5,7 @@ public class Test {
     private String name;
     private String password;
 
+
     public Integer getId() {
         return id;
     }
@@ -27,5 +28,14 @@ public class Test {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "Test{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }
