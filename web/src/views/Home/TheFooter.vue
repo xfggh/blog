@@ -1,6 +1,6 @@
 <template>
     <div class="the-footer">
-        powerd by walle
+        powered by walle
     </div>
 </template>
 

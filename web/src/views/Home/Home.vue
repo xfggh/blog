@@ -19,17 +19,39 @@
             </a-menu>
         </div>
 
-        <div class="home-right"></div>
+        <div class="home-right">
+            {{ ebooks }}
+        </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, reactive, ref, toRef } from 'vue'
+import axios from 'axios'
 
 
 export default defineComponent({
     name: 'Home',
     components: {
+    },
+    setup(){
+
+        // 1. ref 方式绑定
+        let ebooks = ref();
+        // 2. reactive 方式绑定
+        // let ebooks2 = reactive({ books: [] });
+
+        onMounted(() => {
+            axios.get('http://127.0.0.1:8888/ebook/list').then(res => {
+                ebooks.value = res.data.content;
+                // ebooks2.books = res.data.content;
+            });
+        });
+
+        return{
+            ebooks,
+            // ebooks2: toRef(ebooks2, 'books')
+        }
     }
 })
 </script>
@@ -39,6 +61,8 @@ export default defineComponent({
 .home{
     // margin-top: 16px;
     min-height: 600px;
+    display: flex;
+    
     .home-left{
         width: 20%;
         border-bottom: 1px solid #F0F0F0;

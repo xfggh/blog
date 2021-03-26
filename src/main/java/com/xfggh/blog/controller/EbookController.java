@@ -18,6 +18,11 @@ public class EbookController {
     @Resource
     private EbookService ebookService;
 
+    @GetMapping("/listby")
+    public CommonResp<List<EbookResp>> listBy(EbookReq ebookReq) {
+        return ebookService.listBy(ebookReq);
+    }
+
     @GetMapping("/list")
     public CommonResp<List<EbookResp>> list(EbookReq ebookReq) {
         return ebookService.list(ebookReq);

@@ -19,7 +19,7 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public CommonResp<List<EbookResp>> list(EbookReq ebookReq){
+    public CommonResp<List<EbookResp>> listBy(EbookReq ebookReq){
         CommonResp resp = new CommonResp();
         resp.setMessage("查询列表成功");
 
@@ -40,6 +40,20 @@ public class EbookService {
             ebookResp.setCategory1Id(123L);
             ebookRespList.add(ebookResp);
         }*/
+
+        // 复制列表
+        ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
+
+        resp.setContent(ebookRespList);
+        return resp;
+    }
+
+    public CommonResp<List<EbookResp>> list(EbookReq ebookReq){
+        CommonResp resp = new CommonResp();
+        resp.setMessage("查询列表成功");
+
+        List<Ebook> ebookList = ebookMapper.selectByExample(null);
+        List<EbookResp> ebookRespList = new ArrayList<>();
 
         // 复制列表
         ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
