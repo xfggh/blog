@@ -19,17 +19,23 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public CommonResp<List<EbookResp>> listBy(EbookReq ebookReq){
+    public CommonResp<List<EbookResp>> list(EbookReq ebookReq){
         CommonResp resp = new CommonResp();
         resp.setMessage("查询列表成功");
 
-        EbookExample ebookExample = new EbookExample();
-        EbookExample.Criteria criteria =  ebookExample.createCriteria();
+        List<Ebook> ebookList = new ArrayList<>();
+        String name = ebookReq.getName();
+        if(name == null || name == ""){
+            ebookList = ebookMapper.selectByExample(null);
+        }else{
+            EbookExample ebookExample = new EbookExample();
+            EbookExample.Criteria criteria =  ebookExample.createCriteria();
 
-        // criteria 相当于 where 条件
-        criteria.andNameLike("%" + ebookReq.getName() + "%");
+            // criteria 相当于 where 条件
+            criteria.andNameLike("%" + ebookReq.getName() + "%");
+            ebookList = ebookMapper.selectByExample(ebookExample);
+        }
 
-        List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
         List<EbookResp> ebookRespList = new ArrayList<>();
         /*for (Ebook ebook : ebookList) {
             //EbookResp ebookResp = new EbookResp();
@@ -40,20 +46,6 @@ public class EbookService {
             ebookResp.setCategory1Id(123L);
             ebookRespList.add(ebookResp);
         }*/
-
-        // 复制列表
-        ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
-
-        resp.setContent(ebookRespList);
-        return resp;
-    }
-
-    public CommonResp<List<EbookResp>> list(EbookReq ebookReq){
-        CommonResp resp = new CommonResp();
-        resp.setMessage("查询列表成功");
-
-        List<Ebook> ebookList = ebookMapper.selectByExample(null);
-        List<EbookResp> ebookRespList = new ArrayList<>();
 
         // 复制列表
         ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
