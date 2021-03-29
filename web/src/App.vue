@@ -13,8 +13,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import TheFooter from './views/Home/TheFooter.vue'
-import TheHeader from './views/Home/TheHeader.vue'
+import TheFooter from './components/TheFooter.vue'
+import TheHeader from './components/TheHeader.vue'
 
 export default defineComponent({
   components: {
