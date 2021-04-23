@@ -20,13 +20,13 @@
         </div>
 
         <div class="home-right">
-            <a-list :grid="{column: 2, gutter: 0}" item-layout="vertical" size="small" :pagination="false" :data-source="ebooks">
-                <template #footer>
+            <a-list :grid="{column: 3, gutter: 50}" item-layout="vertical" :pagination="false" :data-source="ebooks">
+                <!-- <template #footer>
                     <div>
                         <b>ant design vue</b>
                         footer part
                     </div>
-                </template>
+                </template> -->
                 <template #renderItem="{ item }">
                     <a-list-item key="item.name">
                         <template #actions>
@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref, toRef } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import axios from 'axios'
 
 
@@ -100,18 +100,30 @@ export default defineComponent({
     // margin-top: 16px;
     min-height: 600px;
     display: flex;
+    padding-top: 16px;
     
     .home-left{
-        width: 250px;
-        margin: 0 16px 16px 0;
-        border-bottom: 1px solid #F0F0F0;
+        // width: 250px;
+        // margin-right: 16px;
+        // border-bottom: 1px solid #F0F0F0;
+        border-right: 1px solid #F0F0F0;
 
         .ant-menu{
-            width: 200px;
+            width: 250px;
+            border-right: none;
         }
 
         // box-shadow: 2px 4px 6px 0 rgba(0,0,0,0.04);
         // border-radius: 2px;
+    }
+    .home-right{
+        .ant-row{
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+        }
+        .ant-avatar{
+            border-radius: 2%;
+        }
     }
 }
 </style>

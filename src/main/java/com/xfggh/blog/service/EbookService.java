@@ -7,8 +7,8 @@ import com.xfggh.blog.req.EbookReq;
 import com.xfggh.blog.resp.CommonResp;
 import com.xfggh.blog.resp.EbookResp;
 import com.xfggh.blog.util.CopyUtil;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -25,16 +25,16 @@ public class EbookService {
 
         List<Ebook> ebookList = new ArrayList<>();
         String name = ebookReq.getName();
-        if(name == null || name == ""){
-            ebookList = ebookMapper.selectByExample(null);
-        }else{
-            EbookExample ebookExample = new EbookExample();
-            EbookExample.Criteria criteria =  ebookExample.createCriteria();
 
-            // criteria 相当于 where 条件
+        EbookExample ebookExample = new EbookExample();
+        EbookExample.Criteria criteria =  ebookExample.createCriteria();
+
+        // criteria 相当于 where 条件
+        if(!ObjectUtils.isEmpty(ebookReq.getName())){
             criteria.andNameLike("%" + ebookReq.getName() + "%");
-            ebookList = ebookMapper.selectByExample(ebookExample);
         }
+
+        ebookList = ebookMapper.selectByExample(ebookExample);
 
         List<EbookResp> ebookRespList = new ArrayList<>();
         /*for (Ebook ebook : ebookList) {

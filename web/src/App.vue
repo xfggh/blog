@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <!-- header -->
-    <a-affix :offset-top="top">
+    <a-affix>
       <the-header></the-header>
     </a-affix>
 
