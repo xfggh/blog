@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/tools")
-public class MD5Controller {
+public class HashController {
     private static final Logger LOG = LoggerFactory.getLogger(BlogApplication.class);
 
     @PostMapping("/hash")
@@ -28,7 +28,17 @@ public class MD5Controller {
                 commonResp.setContent(HashUtil.getMD5Str(beforeHash));
                 commonResp.setSuccess(true);
             }else if ("SHA1".equals(type)){
-
+                commonResp.setContent(HashUtil.getSHA1Str(beforeHash));
+                commonResp.setSuccess(true);
+            }else if ("SHA256".equals(type)){
+                commonResp.setContent(HashUtil.getSHA256Str(beforeHash));
+                commonResp.setSuccess(true);
+            }else if ("SHA512".equals(type)){
+                commonResp.setContent(HashUtil.getSHA512Str(beforeHash));
+                commonResp.setSuccess(true);
+            }else{
+                commonResp.setSuccess(false);
+                commonResp.setMessage("传入类型为空");
             }
         }else{
             commonResp.setSuccess(false);
