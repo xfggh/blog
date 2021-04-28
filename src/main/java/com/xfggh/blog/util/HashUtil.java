@@ -1,6 +1,7 @@
 package com.xfggh.blog.util;
 
 import com.xfggh.blog.BlogApplication;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,19 @@ public class HashUtil {
 
     public static String getSHA512Str(String str){
         return new String(DigestUtils.sha512Hex(str));
+    }
+
+    public static String getBase64Str(String str){
+        String result = "";
+
+        Base64 base64 = new Base64();
+        try {
+            result = new String(base64.decode(str), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 }
