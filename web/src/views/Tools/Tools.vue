@@ -56,6 +56,11 @@ export default defineComponent ({
             },
             {
                 key: 3,
+                title: '写一个字',
+                path: '/tools/writing',
+            },
+            {
+                key: 4,
                 title: 'apache',
                 path: '/tools/apache',
             }
