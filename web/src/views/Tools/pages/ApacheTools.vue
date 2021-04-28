@@ -1,6 +1,6 @@
 <template>
     <div class="apache-tools">
-        Apache
+        <h1>Apache</h1>
     </div>
 </template>
 

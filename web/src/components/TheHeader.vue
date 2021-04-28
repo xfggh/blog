@@ -1,41 +1,36 @@
 <template>
     <div class="the-header">
-        <a-menu mode="horizontal" @click="menuClick">
-            <a-menu-item>Home</a-menu-item>
-            <a-sub-menu title="子菜单">
+        <a-menu mode="horizontal" @click="menuClick"
+            v-model:selectedKeys="selectedKeys"
+        >
+            <a-menu-item key="/">Home</a-menu-item>
+            <a-sub-menu key="sub01" title="子菜单">
                 <a-menu-item>子菜单项</a-menu-item>
             </a-sub-menu>
-            <a-menu-item>tools</a-menu-item>
+            <a-menu-item key="/tools">tools</a-menu-item>
         </a-menu>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive, toRefs } from 'vue';
 export default defineComponent ({
     name: "TheHeader",
     setup(){
-        // const menuClick = (e: Event) => {
-        //     console.log('click', e);
-        //     console.log(this);
-        //     // this.$router.push('/tools');
-        // };
+        const state = reactive({
+            selectedKeys: [''],
+            openKeys: [''],
+        });
 
+        // let router = (getCurrentInstance() as any).ctx.$router.currentRoute.value;
 
-
-        // return {
-        //     menuClick
-        // }
+        return {
+            ...toRefs(state),
+        }
     },
     methods: {
         menuClick(e: any){
-            if(e.key === 'item_0'){
-                this.$router.push('/');
-            }
-            if(e.key === 'item_2'){
-                this.$router.push('/tools');
-            }
-            
+            this.$router.push(e.key);
         }
     }
 })
@@ -43,7 +38,7 @@ export default defineComponent ({
 
 <style lang="scss">
 .the-header{
-    margin-bottom: 16px;
+    // margin-bottom: 16px;
     
     .ant-menu{
         background: #fafafa;

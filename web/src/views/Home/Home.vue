@@ -100,7 +100,7 @@ export default defineComponent({
     // margin-top: 16px;
     min-height: 600px;
     display: flex;
-    padding-top: 16px;
+    // padding-top: 16px;
     
     .home-left{
         // width: 250px;
@@ -117,6 +117,7 @@ export default defineComponent({
         // border-radius: 2px;
     }
     .home-right{
+        margin-top: 16px;
         .ant-row{
             margin-right: 0 !important;
             margin-left: 0 !important;

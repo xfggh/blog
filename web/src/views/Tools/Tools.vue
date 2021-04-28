@@ -24,14 +24,13 @@
         </div>
 
         <div class="tools-content">
-            <h1></h1>
             <router-view/>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance, onMounted, reactive, ref, toRefs } from 'vue';
+import { defineComponent, getCurrentInstance, reactive, toRefs } from 'vue';
 import SubMenu from './../../components/SubMenu.vue'
 
 export default defineComponent ({
@@ -44,26 +43,26 @@ export default defineComponent ({
             {
                 key: 1,
                 title: '首页',
-                path: '/',
+                path: '/tools',
             },
             {
                 key: 2,
                 title: '编码/加密',
-                path: '/tools',
+                path: '/tools/code',
                 children: [
-                    { key: 2.1, title: '编码', path: '/tools/base64' },
-                    { key: 2.2, title: '加密', path: '/tools/hash' }
+                    { key: 2.1, title: '编码', path: '/tools/code/base64' },
+                    { key: 2.2, title: '加密', path: '/tools/code/hash' }
                 ]
             },
             {
                 key: 3,
                 title: 'apache',
-                path: '/apache',
+                path: '/tools/apache',
             }
         ];
         const state = reactive({
-            selectedKeys: ['1'],
-            openKeys: ['sub1'],
+            selectedKeys: [''],
+            openKeys: [''],
         });
 
         const onOpenChange = (e: any) => {
@@ -72,9 +71,11 @@ export default defineComponent ({
         }
 
         let router = (getCurrentInstance() as any).ctx.$router.currentRoute.value;
-        let matchedRouter = router.matched;
-        state.openKeys.push(matchedRouter[0].path);
+        console.log(router);
         state.selectedKeys.push(router.path);
+        state.openKeys.push(router.path.substr(0, router.path.lastIndexOf('/')));
+
+
 
         return {
             ...toRefs(state),

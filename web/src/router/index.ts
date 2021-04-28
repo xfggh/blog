@@ -11,9 +11,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/tools', name: 'Tools', component: Tools, 
     children: [
-      { path: 'hash', name: 'Hash', component: Hash },
-      { path: 'base64', name: 'Base64', component: Base64 },
-      { path: 'apache-tools', name: 'ApacheTools', component: ApacheTools }
+      { path: 'code/hash', name: 'Hash', component: Hash },
+      { path: 'code/base64', name: 'Base64', component: Base64 },
+      { path: 'apache', name: 'ApacheTools', component: ApacheTools }
     ]
   }
 ]
