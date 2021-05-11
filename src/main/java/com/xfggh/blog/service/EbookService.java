@@ -67,4 +67,21 @@ public class EbookService {
 
         return pageResp;
     }
+
+    public List<EbookResp> allEbookList(EbookReq ebookReq){
+
+        List<Ebook> ebookList = new ArrayList<>();
+
+        EbookExample ebookExample = new EbookExample();
+        EbookExample.Criteria criteria =  ebookExample.createCriteria();
+
+        ebookList = ebookMapper.selectByExample(ebookExample);
+
+        List<EbookResp> ebookRespList = new ArrayList<>();
+
+        // 复制列表
+        ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
+
+        return ebookRespList;
+    }
 }

@@ -80,26 +80,27 @@ export default defineComponent ({
         const loading = ref(false);
 
         onMounted(() => {
-            getEBookList({});
+            getEBookList({pageNum: 1, pageSize: pagination.value.pageSize});
         })
 
 
         const getEBookList = (params: any) => {
             loading.value = true
-            axios.get('/ebook/list', params).then(res => {
-                ebooks.value = res.data.content;
+            axios.get('/ebook/list', { params }).then(res => {
                 loading.value = false;
 
-                if(params.current){
-                    pagination.value.current = params.current;
-                }
+                let content = res.data.content
+                ebooks.value = content.list;
+
+                pagination.value.total = content.total;
+                pagination.value.current = params.pageNum;
             });
         }
 
         const paginationChange = (pagination: any) => {
             console.log(pagination);
             getEBookList({
-                current: pagination.current,
+                pageNum: pagination.current,
                 pageSize: pagination.pageSize
             });
         }
