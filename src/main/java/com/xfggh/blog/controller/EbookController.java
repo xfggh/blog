@@ -20,6 +20,11 @@ public class EbookController {
 
     @GetMapping("/list")
     public CommonResp<List<EbookResp>> listBy(EbookReq ebookReq) {
-        return ebookService.list(ebookReq);
+        CommonResp<List<EbookResp>> commonResp = new CommonResp<>();
+
+        List<EbookResp> list = ebookService.list(ebookReq);
+        commonResp.setContent(list);
+
+        return commonResp;
     }
 }

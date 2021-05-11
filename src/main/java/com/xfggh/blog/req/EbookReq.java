@@ -1,5 +1,8 @@
 package com.xfggh.blog.req;
 
+/**
+ * 请求参数类
+ */
 public class EbookReq {
     private Long id;
 

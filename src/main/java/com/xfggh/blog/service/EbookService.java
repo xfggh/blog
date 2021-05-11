@@ -26,15 +26,8 @@ public class EbookService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BlogApplication.class);
 
-    public CommonResp<List<EbookResp>> list(EbookReq ebookReq){
-        CommonResp resp = new CommonResp();
-        resp.setMessage("查询列表成功");
-
-
-
-
+    public List<EbookResp> list(EbookReq ebookReq){
         List<Ebook> ebookList = new ArrayList<>();
-        String name = ebookReq.getName();
 
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria =  ebookExample.createCriteria();
@@ -48,6 +41,7 @@ public class EbookService {
         PageHelper.startPage(1, 3);
 
         ebookList = ebookMapper.selectByExample(ebookExample);
+        // 分页信息
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
         LOG.info("分页总条数 {}", pageInfo.getTotal());
         LOG.info("分页总页数 {}", pageInfo.getPages());
@@ -66,7 +60,6 @@ public class EbookService {
         // 复制列表
         ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
 
-        resp.setContent(ebookRespList);
-        return resp;
+        return ebookRespList;
     }
 }
