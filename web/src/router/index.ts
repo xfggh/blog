@@ -8,6 +8,8 @@ import Base64 from './../views/Tools/pages/Base64.vue'
 import ApacheTools from './../views/Tools/pages/ApacheTools.vue'
 import Writing from './../views/Tools/pages/Writing.vue'
 
+import Admin from './../views/Admin/Admin.vue'
+
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'Home', component: Home },
   {
@@ -18,7 +20,8 @@ const routes: Array<RouteRecordRaw> = [
       { path: 'writing', name: 'Writing', component: Writing },
       { path: 'apache', name: 'ApacheTools', component: ApacheTools },
     ]
-  }
+  },
+  { path: '/admin', name: 'Admin', component: Admin },
 ]
 
 const router = createRouter({
