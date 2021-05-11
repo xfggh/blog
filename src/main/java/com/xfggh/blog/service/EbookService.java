@@ -9,6 +9,7 @@ import com.xfggh.blog.mapper.EbookMapper;
 import com.xfggh.blog.req.EbookReq;
 import com.xfggh.blog.resp.CommonResp;
 import com.xfggh.blog.resp.EbookResp;
+import com.xfggh.blog.resp.PageResp;
 import com.xfggh.blog.util.CopyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,9 @@ public class EbookService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BlogApplication.class);
 
-    public List<EbookResp> list(EbookReq ebookReq){
+    public PageResp<EbookResp> list(EbookReq ebookReq){
+        PageResp<EbookResp> pageResp = new PageResp<>();
+
         List<Ebook> ebookList = new ArrayList<>();
 
         EbookExample ebookExample = new EbookExample();
@@ -38,13 +41,14 @@ public class EbookService {
         }
 
         // 分页 | 只对遇到的第一个 select 起作用
-        PageHelper.startPage(1, 3);
+        PageHelper.startPage(ebookReq.getPageNum(), ebookReq.getPageSize());
 
         ebookList = ebookMapper.selectByExample(ebookExample);
         // 分页信息
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
-        LOG.info("分页总条数 {}", pageInfo.getTotal());
-        LOG.info("分页总页数 {}", pageInfo.getPages());
+        pageResp.setTotal(pageInfo.getTotal());
+        // LOG.info("分页总条数 {}", pageInfo.getTotal());
+        // LOG.info("分页总页数 {}", pageInfo.getPages());
 
         List<EbookResp> ebookRespList = new ArrayList<>();
         /*for (Ebook ebook : ebookList) {
@@ -59,7 +63,8 @@ public class EbookService {
 
         // 复制列表
         ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
+        pageResp.setList(ebookRespList);
 
-        return ebookRespList;
+        return pageResp;
     }
 }

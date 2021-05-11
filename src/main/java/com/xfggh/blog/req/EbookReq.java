@@ -3,7 +3,7 @@ package com.xfggh.blog.req;
 /**
  * 请求参数类
  */
-public class EbookReq {
+public class EbookReq extends PageReq {
     private Long id;
 
     private String name;

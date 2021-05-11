@@ -2,6 +2,7 @@ package com.xfggh.blog.controller;
 
 import com.xfggh.blog.req.EbookReq;
 import com.xfggh.blog.resp.EbookResp;
+import com.xfggh.blog.resp.PageResp;
 import com.xfggh.blog.service.EbookService;
 import com.xfggh.blog.resp.CommonResp;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +20,11 @@ public class EbookController {
     private EbookService ebookService;
 
     @GetMapping("/list")
-    public CommonResp<List<EbookResp>> listBy(EbookReq ebookReq) {
-        CommonResp<List<EbookResp>> commonResp = new CommonResp<>();
+    public CommonResp<PageResp<EbookResp>> listBy(EbookReq ebookReq) {
+        CommonResp<PageResp<EbookResp>> commonResp = new CommonResp<>();
 
-        List<EbookResp> list = ebookService.list(ebookReq);
-        commonResp.setContent(list);
+        PageResp<EbookResp> pageResp = ebookService.list(ebookReq);
+        commonResp.setContent(pageResp);
 
         return commonResp;
     }
