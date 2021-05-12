@@ -21,9 +21,16 @@
                     <a-button type="primary" @click="editItem(record)">
                         编辑
                     </a-button>
-                    <a-button type="danger" @click="deleteItem()">
-                        删除
-                    </a-button>
+                    <a-popconfirm
+                        title="确定删除此条记录吗？"
+                        ok-text="是"
+                        cancel-text="否"
+                        @confirm="deleteItem(record.id)"
+                    >
+                        <a-button type="danger">
+                            删除
+                        </a-button>
+                    </a-popconfirm>
                 </a-space>
             </template>
 
@@ -140,7 +147,7 @@ export default defineComponent ({
                 let content = res.data.content
                 ebooks.value = content.list;
 
-                pagination.value.total = content.total;
+                pagination.value.total = Number(content.total);
                 pagination.value.current = params.pageNum;
             });
         }
@@ -169,9 +176,13 @@ export default defineComponent ({
             ebook.value = JSON.parse(JSON.stringify(record));
             modalVisible.value = true;
         }
-        const deleteItem = () => {
+        const deleteItem = (id: any) => {
             console.log('delete');
-            
+            axios.delete(`/ebook/delete/${id}`).then(res => {
+                if(res.data.success){
+                    getEBookList({pageNum: pagination.value.current, pageSize: pagination.value.pageSize})
+                }
+            })
         }
 
         const modalConfirmLoading = ref(false);

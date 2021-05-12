@@ -109,4 +109,10 @@ public class EbookService {
 
         return commonResp;
     }
+
+    public void delete(long id){
+        ebookMapper.deleteByPrimaryKey(id);
+    }
+
+
 }
