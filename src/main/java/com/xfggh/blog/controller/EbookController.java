@@ -1,13 +1,12 @@
 package com.xfggh.blog.controller;
 
-import com.xfggh.blog.req.EbookReq;
-import com.xfggh.blog.resp.EbookResp;
+import com.xfggh.blog.req.EbookQueryReq;
+import com.xfggh.blog.req.EbookSaveReq;
+import com.xfggh.blog.resp.EbookQueryResp;
 import com.xfggh.blog.resp.PageResp;
 import com.xfggh.blog.service.EbookService;
 import com.xfggh.blog.resp.CommonResp;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,22 +19,29 @@ public class EbookController {
     private EbookService ebookService;
 
     @GetMapping("/list")
-    public CommonResp<PageResp<EbookResp>> listBy(EbookReq ebookReq) {
-        CommonResp<PageResp<EbookResp>> commonResp = new CommonResp<>();
+    public CommonResp<PageResp<EbookQueryResp>> listBy(EbookQueryReq ebookReq) {
+        CommonResp<PageResp<EbookQueryResp>> commonResp = new CommonResp<>();
 
-        PageResp<EbookResp> pageResp = ebookService.list(ebookReq);
+        PageResp<EbookQueryResp> pageResp = ebookService.list(ebookReq);
         commonResp.setContent(pageResp);
 
         return commonResp;
     }
 
     @GetMapping("/all")
-    public CommonResp<List<EbookResp>> allEbookList(EbookReq ebookReq) {
-        CommonResp<List<EbookResp>> commonResp = new CommonResp<>();
+    public CommonResp<List<EbookQueryResp>> allEbookList(EbookQueryReq ebookReq) {
+        CommonResp<List<EbookQueryResp>> commonResp = new CommonResp<>();
 
-        List<EbookResp> list = ebookService.allEbookList(ebookReq);
+        List<EbookQueryResp> list = ebookService.allEbookList(ebookReq);
         commonResp.setContent(list);
 
+        return commonResp;
+    }
+
+    @PostMapping("/save")
+    public CommonResp save(@RequestBody EbookSaveReq ebookSaveReq){
+        CommonResp commonResp = new CommonResp();
+        commonResp = ebookService.save(ebookSaveReq);
         return commonResp;
     }
 }

@@ -6,11 +6,13 @@ import com.xfggh.blog.BlogApplication;
 import com.xfggh.blog.entity.Ebook;
 import com.xfggh.blog.entity.EbookExample;
 import com.xfggh.blog.mapper.EbookMapper;
-import com.xfggh.blog.req.EbookReq;
+import com.xfggh.blog.req.EbookQueryReq;
+import com.xfggh.blog.req.EbookSaveReq;
 import com.xfggh.blog.resp.CommonResp;
-import com.xfggh.blog.resp.EbookResp;
+import com.xfggh.blog.resp.EbookQueryResp;
 import com.xfggh.blog.resp.PageResp;
 import com.xfggh.blog.util.CopyUtil;
+import com.xfggh.blog.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,10 +27,13 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
+    @Resource
+    private SnowFlake snowFlake;
+
     private static final Logger LOG = LoggerFactory.getLogger(BlogApplication.class);
 
-    public PageResp<EbookResp> list(EbookReq ebookReq){
-        PageResp<EbookResp> pageResp = new PageResp<>();
+    public PageResp<EbookQueryResp> list(EbookQueryReq ebookReq){
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
 
         List<Ebook> ebookList = new ArrayList<>();
 
@@ -50,7 +55,7 @@ public class EbookService {
         // LOG.info("分页总条数 {}", pageInfo.getTotal());
         // LOG.info("分页总页数 {}", pageInfo.getPages());
 
-        List<EbookResp> ebookRespList = new ArrayList<>();
+        List<EbookQueryResp> ebookRespList = new ArrayList<>();
         /*for (Ebook ebook : ebookList) {
             //EbookResp ebookResp = new EbookResp();
             //BeanUtils.copyProperties(ebook, ebookResp);
@@ -62,13 +67,13 @@ public class EbookService {
         }*/
 
         // 复制列表
-        ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
+        ebookRespList = CopyUtil.copyList(ebookList, EbookQueryResp.class);
         pageResp.setList(ebookRespList);
 
         return pageResp;
     }
 
-    public List<EbookResp> allEbookList(EbookReq ebookReq){
+    public List<EbookQueryResp> allEbookList(EbookQueryReq ebookReq){
 
         List<Ebook> ebookList = new ArrayList<>();
 
@@ -77,11 +82,31 @@ public class EbookService {
 
         ebookList = ebookMapper.selectByExample(ebookExample);
 
-        List<EbookResp> ebookRespList = new ArrayList<>();
+        List<EbookQueryResp> ebookRespList = new ArrayList<>();
 
         // 复制列表
-        ebookRespList = CopyUtil.copyList(ebookList, EbookResp.class);
+        ebookRespList = CopyUtil.copyList(ebookList, EbookQueryResp.class);
 
         return ebookRespList;
+    }
+
+    public CommonResp save(EbookSaveReq ebookSaveReq){
+        CommonResp commonResp = new CommonResp();
+        try{
+            Ebook ebook = CopyUtil.copy(ebookSaveReq, Ebook.class);
+
+            if(ObjectUtils.isEmpty(ebookSaveReq.getId())){
+                ebook.setId(snowFlake.nextId());
+                ebookMapper.insert(ebook);
+            }else{
+                ebookMapper.updateByPrimaryKey(ebook);
+            }
+        }catch (Exception e){
+            commonResp.setMessage(e.getMessage());
+            commonResp.setSuccess(false);
+            LOG.error(e.getMessage());
+        }
+
+        return commonResp;
     }
 }

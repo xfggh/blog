@@ -1,5 +1,9 @@
 <template>
     <div class="admin">
+        <div class="add-btn">
+            <a-button type="primary" @click="addItem">新增</a-button>
+        </div>
+
         <a-table 
             :dataSource="ebooks" 
             :columns="columns"
@@ -28,6 +32,7 @@
 
     <a-modal v-model:visible="modalVisible" title="编辑" @ok="modalHandleOk"
         cancelText="取消" okText="确定"
+        :confirm-loading="modalConfirmLoading"
     >
         <div class="editModal">
             <a-form :model="ebook" labelAlign="right">
@@ -69,8 +74,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref, UnwrapRef } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
+import { message } from 'ant-design-vue';
 import axios from 'axios';
+
 
 // interface formData {
 //     cover: string,
@@ -154,16 +161,34 @@ export default defineComponent ({
 
         // 弹窗 编辑
         const modalVisible = ref(false);
+
+        const addItem = () => {
+            modalVisible.value = true;
+        }
         const editItem = (record: any) => {
-            ebook.value = record;
+            ebook.value = JSON.parse(JSON.stringify(record));
             modalVisible.value = true;
         }
         const deleteItem = () => {
             console.log('delete');
             
         }
+
+        const modalConfirmLoading = ref(false);
         const modalHandleOk = () => {
-            modalVisible.value = false;
+            modalConfirmLoading.value = true;
+            axios.post('/ebook/save', ebook.value).then(res => {
+                let data = res.data;
+                if(data.success){
+                    modalConfirmLoading.value = false;
+                    modalVisible.value = false;
+
+                    getEBookList({pageNum: pagination.value.current, pageSize: pagination.value.pageSize})
+                }else{
+                    message.error(data.message);
+                    modalConfirmLoading.value = false;
+                }
+            })
         }
 
         // 表单
@@ -177,9 +202,6 @@ export default defineComponent ({
         //     voteCount: 0
         // })
         const ebook = ref({});
-        const onSubmit = () => {
-            console.log('onSubmit');
-        }
 
 
         onMounted(() => {
@@ -193,11 +215,14 @@ export default defineComponent ({
             paginationChange,
             loading,
             modalVisible,
+
             editItem,
             deleteItem,
+            addItem,
+
             modalHandleOk,
-            ebook,
-            onSubmit
+            modalConfirmLoading,
+            ebook
         }
     }
 })
@@ -207,11 +232,20 @@ export default defineComponent ({
 .admin{
     min-height: 600px;
     padding: 20px;
+
+    .add-btn{
+        margin-bottom: 20px;
+        text-align: right;
+    }
 }
 
 .editModal{
     display: flex;
     justify-content: center;
+
+    .ant-form-item{
+        margin-bottom: 10px;
+    }
     .ant-form-item-label{
         width: 56px;
         margin-right: 20px;

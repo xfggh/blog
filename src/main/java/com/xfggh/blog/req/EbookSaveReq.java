@@ -1,6 +1,6 @@
-package com.xfggh.blog.resp;
+package com.xfggh.blog.req;
 
-public class EbookResp {
+public class EbookSaveReq {
     private Long id;
     private String cover;
 
