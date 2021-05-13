@@ -1,8 +1,26 @@
 package com.xfggh.blog.req;
 
+import javax.validation.constraints.NotNull;
+
 public class EbookSaveReq {
     private Long id;
+
     private String cover;
+
+    @NotNull(message = "【名称】不能为空")
+    private String name;
+
+    private Long category1Id;
+
+    private Long category2Id;
+
+    private String description;
+
+    private Integer docCount;
+
+    private Integer viewCount;
+
+    private Integer voteCount;
 
     public Long getId() {
         return id;
@@ -19,20 +37,6 @@ public class EbookSaveReq {
     public void setCover(String cover) {
         this.cover = cover;
     }
-
-    private String name;
-
-    private Long category1Id;
-
-    private Long category2Id;
-
-    private String description;
-
-    private Integer docCount;
-
-    private Integer viewCount;
-
-    private Integer voteCount;
 
     public String getName() {
         return name;

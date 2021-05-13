@@ -42,12 +42,14 @@
         :confirm-loading="modalConfirmLoading"
     >
         <div class="editModal">
-            <a-form :model="ebook" labelAlign="right">
+            <a-form ref="ebookRef" :model="ebook" labelAlign="right" :rules="rules"
+                @finishFailed="formFinishFailed"
+            >
                 <a-form-item label="封面">
                     <a-input v-model:value="ebook.cover" />
                 </a-form-item>
 
-                <a-form-item label="名称">
+                <a-form-item label="名称" name="name">
                     <a-input v-model:value="ebook.name" />
                 </a-form-item>
 
@@ -59,7 +61,7 @@
                     <a-input v-model:value="ebook.category2Id" />
                 </a-form-item>
 
-                <a-form-item label="文档数">
+                <!-- <a-form-item label="文档数">
                     <a-input v-model:value="ebook.docCount" />
                 </a-form-item>
 
@@ -69,7 +71,7 @@
 
                 <a-form-item label="阅读数">
                     <a-input v-model:value="ebook.viewCount" />
-                </a-form-item>
+                </a-form-item> -->
 
                 <!-- <div class="formBtn">
                     <a-button type="primary" @click="onSubmit">Create</a-button>
@@ -192,20 +194,31 @@ export default defineComponent ({
 
         const modalConfirmLoading = ref(false);
         const modalHandleOk = () => {
-            modalConfirmLoading.value = true;
-            axios.post('/ebook/save', ebook.value).then(res => {
-                let data = res.data;
-                if(data.success){
-                    modalConfirmLoading.value = false;
-                    modalVisible.value = false;
+            ebookRef.value.validate().then(() => {
+                modalConfirmLoading.value = true;
+                axios.post('/ebook/save', ebook.value).then(res => {
+                    let data = res.data;
+                    if(data.success){
+                        modalConfirmLoading.value = false;
+                        modalVisible.value = false;
 
-                    getEBookList({pageNum: pagination.value.current, pageSize: pagination.value.pageSize})
-                }else{
-                    message.error(data.message);
-                    modalConfirmLoading.value = false;
-                }
-            })
+                        getEBookList({pageNum: pagination.value.current, pageSize: pagination.value.pageSize});
+
+                        ebookRef.value.resetFields();
+                    }else{
+                        message.error(data.message);
+                        modalConfirmLoading.value = false;
+                    }
+                })
+            }).catch((error: any) => {
+                console.log('error', error);
+            });
+        };
+
+        const formFinishFailed = (error: any) => {
+            console.log(error);
         }
+
 
         // 表单
         // const formData: UnwrapRef<formData> = reactive({
@@ -218,6 +231,12 @@ export default defineComponent ({
         //     voteCount: 0
         // })
         const ebook = ref({});
+        const ebookRef = ref();
+        const rules = {
+            name: [
+                { required: true, message: 'Please input Activity name', trigger: 'blur' },
+            ],
+        };
 
 
         onMounted(() => {
@@ -238,7 +257,10 @@ export default defineComponent ({
 
             modalHandleOk,
             modalConfirmLoading,
-            ebook
+            ebook,
+            ebookRef,
+            rules,
+            formFinishFailed
         }
     }
 })
