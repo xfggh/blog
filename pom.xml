@@ -54,6 +54,12 @@
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 
+		<!-- 添加 校验 依赖 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
 		<!-- pagehelper 插件-->
 		<dependency>
 			<groupId>com.github.pagehelper</groupId>

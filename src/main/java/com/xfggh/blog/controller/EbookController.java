@@ -9,6 +9,7 @@ import com.xfggh.blog.resp.CommonResp;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,7 +20,7 @@ public class EbookController {
     private EbookService ebookService;
 
     @GetMapping("/list")
-    public CommonResp<PageResp<EbookQueryResp>> listBy(EbookQueryReq ebookReq) {
+    public CommonResp<PageResp<EbookQueryResp>> listBy(@Valid EbookQueryReq ebookReq) {
         CommonResp<PageResp<EbookQueryResp>> commonResp = new CommonResp<>();
 
         PageResp<EbookQueryResp> pageResp = ebookService.list(ebookReq);

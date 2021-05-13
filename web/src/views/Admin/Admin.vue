@@ -143,18 +143,23 @@ export default defineComponent ({
             loading.value = true
             axios.get('/ebook/list', { params }).then(res => {
                 loading.value = false;
-
-                let content = res.data.content
-                ebooks.value = content.list;
-
-                pagination.value.total = Number(content.total);
                 pagination.value.current = params.pageNum;
+
+                let data = res.data;
+
+                if(data.success){
+                    let content = res.data.content
+                    ebooks.value = content.list;
+                    pagination.value.total = Number(content.total);
+                }else{
+                    message.error(data.message);
+                }
             });
         }
 
         // 分页
         const pagination = ref({
-            current: 1,
+            current: 0,
             pageSize: 2,
             total: 6
         });
