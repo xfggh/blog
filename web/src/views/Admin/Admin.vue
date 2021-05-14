@@ -1,6 +1,24 @@
 <template>
     <div class="admin">
         <div class="add-btn">
+            <a-form
+                layout="inline"
+                :model="queryParam"
+            >
+                <a-form-item>
+                    <a-input style="width: 260px;" v-model:value="queryParam.name" placeholder="名称">
+                    </a-input>
+                </a-form-item>
+                <a-form-item>
+                    <a-button
+                        type="primary"
+                        @click="handleQuery"
+                    >
+                        查询
+                    </a-button>
+                </a-form-item>
+            </a-form>
+
             <a-button type="primary" @click="addItem">新增</a-button>
         </div>
 
@@ -137,13 +155,28 @@ export default defineComponent ({
                 slots: { customRender: 'action' }
             }
         ];
+
+        const queryParam = ref();
+        queryParam.value = {};
         
         const ebooks = ref();
         const loading = ref(false);
 
+        
+        const handleQuery = () => {
+            console.log(queryParam.value.name);
+            getEBookList({
+                pageNum: 1, pageSize: pagination.value.pageSize
+            })
+        }
+
         const getEBookList = (params: any) => {
             loading.value = true
-            axios.get('/ebook/list', { params }).then(res => {
+            axios.get('/ebook/list', { params: {
+                pageNum: params.pageNum,
+                pageSize: params.pageSize,
+                name: queryParam.value.name
+            } }).then(res => {
                 loading.value = false;
                 pagination.value.current = params.pageNum;
 
@@ -246,6 +279,10 @@ export default defineComponent ({
         return {
             columns,
             pagination,
+
+            queryParam,
+            handleQuery,
+
             ebooks,
             paginationChange,
             loading,
@@ -272,8 +309,10 @@ export default defineComponent ({
     padding: 20px;
 
     .add-btn{
+        display: flex;
         margin-bottom: 20px;
-        text-align: right;
+        align-items: center;
+        justify-content: space-between;
     }
 }
 
