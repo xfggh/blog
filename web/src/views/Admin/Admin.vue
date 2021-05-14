@@ -104,6 +104,7 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios';
+import { Tool } from "./../../util/Tools";
 
 
 // interface formData {
@@ -213,7 +214,9 @@ export default defineComponent ({
             modalVisible.value = true;
         }
         const editItem = (record: any) => {
-            ebook.value = JSON.parse(JSON.stringify(record));
+            // ebook.value = JSON.parse(JSON.stringify(record));
+            ebook.value = Tool.copy(record);
+
             modalVisible.value = true;
         }
         const deleteItem = (id: any) => {
