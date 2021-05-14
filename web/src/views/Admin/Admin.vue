@@ -222,8 +222,13 @@ export default defineComponent ({
         const deleteItem = (id: any) => {
             console.log('delete');
             axios.delete(`/ebook/delete/${id}`).then(res => {
+                pagination.value.total
                 if(res.data.success){
-                    getEBookList({pageNum: pagination.value.current, pageSize: pagination.value.pageSize})
+                    if((pagination.value.total-1) / pagination.value.pageSize > pagination.value.current-1){
+                        getEBookList({pageNum: pagination.value.current, pageSize: pagination.value.pageSize})
+                    }else{
+                        getEBookList({pageNum: pagination.value.current-1, pageSize: pagination.value.pageSize})
+                    }
                 }
             })
         }
