@@ -46,12 +46,13 @@
                 </a-form-item>
 
                 <a-form-item label="父分类">
-                    <a-input v-model:value="Category.parent" />
+                    <!-- <a-input v-model:value="Category.parent" /> -->
                     <a-select
                         v-model:value="Category.parent"
-                        style="width: 120px"
+                        style="width: 260px"
                     >
-                        <a-select-option v-for="(item, index) in level1" :value="item.id" :key="index">{{ item.name }}</a-select-option>
+                        <a-select-option value="0">无</a-select-option>
+                        <a-select-option :disabled="item.id == Category.parent || item.id == Category.id" v-for="item in level1" :value="item.id" :key="item.id">{{ item.name }}</a-select-option>
                     </a-select>
                 </a-form-item>
 
@@ -222,7 +223,7 @@ export default defineComponent ({
         display: flex;
         margin-bottom: 20px;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
     }
 }
 
