@@ -10,6 +10,7 @@ import Writing from './../views/Tools/pages/Writing.vue'
 
 import Admin from './../views/Admin/Admin.vue'
 import EbookManage from './../views/Admin/EbookManage/EbookManage.vue'
+import CategoryManage from './../views/Admin/CategoryManage/CategoryManage.vue'
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'Home', component: Home },
@@ -27,6 +28,7 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/admin/ebook-manage',
     children: [
       { path: 'ebook-manage', name: 'EbookManage', component: EbookManage },
+      { path: 'category', name: 'CategoryManage', component: CategoryManage },
       { path: '*', redirect: '/admin' }, // 不生效
     ]
   },

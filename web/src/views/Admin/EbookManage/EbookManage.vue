@@ -117,7 +117,7 @@ import { Tool } from "./../../../util/Tools";
 //     viewCount: number
 // }
 export default defineComponent ({
-    name: "Admin",
+    name: "EbookManage",
     setup(){
         const columns = [
             {
