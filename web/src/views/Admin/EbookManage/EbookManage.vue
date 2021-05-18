@@ -124,6 +124,7 @@ import { defineComponent, onMounted, ref, toRaw } from "vue";
 import { message } from "ant-design-vue";
 import axios from "axios";
 import { Tool } from "./../../../util/Tools";
+import { ColSize } from "ant-design-vue/lib/grid/Col";
 
 interface Ebook {
   category1Id: string;
@@ -265,6 +266,8 @@ export default defineComponent({
     const modalVisible = ref(false);
 
     const addItem = () => {
+      ebook.value = {} as Ebook;
+      categoryVal.value = [];
       modalVisible.value = true;
     };
     const editItem = (record: Ebook) => {
@@ -323,7 +326,6 @@ export default defineComponent({
                 pageSize: pagination.value.pageSize,
               });
 
-              ebookRef.value.resetFields();
             } else {
               message.error(data.message);
               modalConfirmLoading.value = false;
@@ -334,6 +336,9 @@ export default defineComponent({
           console.log("error", error);
         });
     };
+    // const modalHandleCancel = () => {
+    //   console.log(123);
+    // }
 
     const formFinishFailed = (error: any) => {
       console.log(error);
@@ -383,6 +388,7 @@ export default defineComponent({
       addItem,
 
       modalHandleOk,
+      // modalHandleCancel,
       modalConfirmLoading,
       ebook,
       ebookRef,
