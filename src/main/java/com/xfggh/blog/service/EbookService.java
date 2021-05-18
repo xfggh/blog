@@ -80,6 +80,17 @@ public class EbookService {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria =  ebookExample.createCriteria();
 
+        LOG.info("type{}", ebookReq.getType());
+        if(!ObjectUtils.isEmpty(ebookReq.getCategoryId())){
+            if(ebookReq.getType() == 1){
+                LOG.info("getCategoryId {}", ebookReq.getCategoryId());
+                criteria.andCategory1IdEqualTo(ebookReq.getCategoryId());
+            }
+            if(ebookReq.getType() == 2){
+                criteria.andCategory2IdEqualTo(ebookReq.getCategoryId());
+            }
+        }
+
         ebookList = ebookMapper.selectByExample(ebookExample);
 
         List<EbookQueryResp> ebookRespList = new ArrayList<>();

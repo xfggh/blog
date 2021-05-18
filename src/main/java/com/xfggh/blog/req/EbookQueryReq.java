@@ -8,6 +8,9 @@ public class EbookQueryReq extends PageReq {
 
     private String name;
 
+    private Long categoryId;
+    private int type; // 区分 分类一 id 和 分类二 id
+
     public Long getId() {
         return id;
     }
@@ -22,5 +25,21 @@ public class EbookQueryReq extends PageReq {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

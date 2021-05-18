@@ -1,26 +1,18 @@
 <template>
     <div class="home">
         <div class="home-left">
-            <a-menu mode="inline">
-                <a-menu-item key="1">菜单项</a-menu-item>
+            <a-menu mode="inline" :openKeys="openKey" @openChange="onOpenChange">
+                <a-menu-item key="0" @click="welcomeClick">首页</a-menu-item>
 
-                <a-sub-menu key="sub1">
-                    <template #title>
-                        <span>
-                            <!-- <LogoutOutlined /> -->
-                            <span>Navigation One</span>
-                        </span>
-                    </template>
-                    <a-menu-item key="5">Option 5</a-menu-item>
-                    <a-menu-item key="6">Option 6</a-menu-item>
-                    <a-menu-item key="7">Option 7</a-menu-item>
-                    <a-menu-item key="8">Option 8</a-menu-item>
+                <a-sub-menu @titleClick="categoryClick(category.id, 1)" :title="category.name" :key="category.id" v-for="category in categorys">
+                    <a-menu-item @click="categoryClick(item.id, 2)" :key="item.id" v-for="item in category.children">{{ item.name }}</a-menu-item>
                 </a-sub-menu>
             </a-menu>
         </div>
 
         <div class="home-right">
-            <a-list :grid="{column: 3, gutter: 50}" item-layout="vertical" :pagination="false" :data-source="ebooks">
+            <h2 style="margin: -10px 0 0 16px" v-if="isWelcome">welcome</h2>
+            <a-list v-if="!isWelcome" :grid="{column: 3, gutter: 50}" item-layout="vertical" :pagination="false" :data-source="ebooks">
                 <!-- <template #footer>
                     <div>
                         <b>ant design vue</b>
@@ -57,8 +49,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref, toRaw } from 'vue'
 import axios from 'axios'
+import { Tool } from '../../util/Tools';
+import { message } from 'ant-design-vue';
 
 
 export default defineComponent({
@@ -71,12 +65,18 @@ export default defineComponent({
         let ebooks = ref();
         // 2. reactive 方式绑定
         // let ebooks2 = reactive({ books: [] });
+        const getEboks = (params: any) => {
+            isWelcome.value = false;
 
-        onMounted(() => {
-            axios.get('/ebook/all').then(res => {
+            axios.get('/ebook/all', { params }).then(res => {
                 ebooks.value = res.data.content;
                 // ebooks2.books = res.data.content;
             });
+        }
+
+        onMounted(() => {
+            getCategorys();
+            getEboks({});
         });
 
         const actions: Record<string, string>[] = [
@@ -85,10 +85,55 @@ export default defineComponent({
             { type: 'MessageOutlined', text: '2' },
         ];
 
+        // 分类菜单
+        const categorys = ref();
+        let categoryList: any;
+        const getCategorys = () => {
+            axios.get("/category/list").then((res) => {
+                let data = res.data;
+                if (data.success) {
+                    categoryList = res.data.content;
+                    categorys.value = Tool.array2Tree(Tool.copy(categoryList), 0);
+                    console.log(toRaw(categorys.value));
+                } else {
+                    message.error(data.message);
+                }
+            });
+        }
+        const categoryClick = (key: any, type: number) => {
+            getEboks({
+                categoryId: key,
+                type
+            })
+        }
+
+        // 只展开一个菜单
+        const openKey = ref();
+        openKey.value = [];
+        const onOpenChange = (openKeys: string[]) => {
+            let latestOpenKey = openKeys.find((key: any) => { 
+                return openKey.value.indexOf(key) === -1
+            });
+
+            openKey.value = latestOpenKey ? [latestOpenKey] : [];
+        };
+
+        // 显示 欢迎页
+        const isWelcome = ref(false);
+        const welcomeClick = () => {
+            isWelcome.value = true;
+        }
+
         return{
             ebooks,
             // ebooks2: toRef(ebooks2, 'books'),
-            actions
+            actions,
+            categorys,
+            categoryClick,
+            openKey,
+            onOpenChange,
+            isWelcome,
+            welcomeClick
         }
     }
 })
@@ -124,6 +169,9 @@ export default defineComponent({
         }
         .ant-avatar{
             border-radius: 2%;
+        }
+        .ant-list-item{
+            min-width: 287px;
         }
     }
 }
