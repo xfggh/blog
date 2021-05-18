@@ -86,6 +86,10 @@
           />
         </a-form-item>
 
+        <a-form-item label="描述">
+          <a-input v-model:value="ebook.description" />
+        </a-form-item>
+
         <!-- <a-form-item label="分类一">
                     <a-input v-model:value="ebook.category1Id" />
                 </a-form-item>
@@ -346,6 +350,7 @@ export default defineComponent({
     //     voteCount: 0
     // })
     const ebook = ref<Ebook>();
+    ebook.value = {} as Ebook;
     const ebookRef = ref();
     const rules = {
       name: [
