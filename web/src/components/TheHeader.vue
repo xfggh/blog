@@ -2,6 +2,7 @@
     <div class="the-header">
         <a-menu mode="horizontal" @click="menuClick"
             v-model:selectedKeys="selectedKeys"
+            theme="dark"
         >
             <a-menu-item key="/">Home</a-menu-item>
             <a-sub-menu key="sub01" title="子菜单">
@@ -39,11 +40,11 @@ export default defineComponent ({
 </script>
 
 <style lang="scss">
-.the-header{
-    // margin-bottom: 16px;
+// .the-header{
+//     // margin-bottom: 16px;
     
-    .ant-menu{
-        background: #fafafa;
-    }
-}
+//     // .ant-menu{
+//     //     // background: #fafafa;
+//     // }
+// }
 </style>

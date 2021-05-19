@@ -1,7 +1,11 @@
 <template>
     <div class="home">
         <div class="home-left">
-            <a-menu mode="inline" :openKeys="openKey" @openChange="onOpenChange">
+            <a-menu mode="inline" 
+                :openKeys="openKey" 
+                @openChange="onOpenChange"
+                :selectedKeys="selectedKeys"
+            >
                 <a-menu-item key="0" @click="welcomeClick">首页</a-menu-item>
 
                 <a-sub-menu @titleClick="categoryClick(category.id, 1)" :title="category.name" :key="category.id" v-for="category in categorys">
@@ -100,7 +104,15 @@ export default defineComponent({
                 }
             });
         }
+
+        // 保持一个导航菜单选中
+        const selectedKeys = ref();
         const categoryClick = (key: any, type: number) => {
+            if(type === 1){
+                selectedKeys.value = [];
+            }else{
+                selectedKeys.value = [key];
+            }
             getEboks({
                 categoryId: key,
                 type
@@ -121,6 +133,7 @@ export default defineComponent({
         // 显示 欢迎页
         const isWelcome = ref(false);
         const welcomeClick = () => {
+            selectedKeys.value = ['0'];
             isWelcome.value = true;
         }
 
@@ -131,6 +144,7 @@ export default defineComponent({
             categorys,
             categoryClick,
             openKey,
+            selectedKeys,
             onOpenChange,
             isWelcome,
             welcomeClick
