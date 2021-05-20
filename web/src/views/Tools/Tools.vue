@@ -63,6 +63,11 @@ export default defineComponent ({
                 key: 4,
                 title: 'apache',
                 path: '/tools/apache',
+            },
+            {
+                key: 5,
+                title: '虚拟键盘',
+                path: '/tools/key-board',
             }
         ];
         const state = reactive({
