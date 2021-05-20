@@ -252,7 +252,7 @@ export default defineComponent({
     const pagination = ref({
       current: 0,
       pageSize: 2,
-      total: 6,
+      total: 0,
     });
     const paginationChange = (pagination: any) => {
       console.log(pagination);

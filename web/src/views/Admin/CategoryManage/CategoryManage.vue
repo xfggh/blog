@@ -111,17 +111,14 @@ export default defineComponent ({
                 let data = res.data;
                 if(data.success){
                     let content = res.data.content
-                    // categorys.value = content;
-                    // console.log(categorys.value);
 
                     level1.value = Tool.array2Tree(content, 0);
-                    // console.log(level1.value);
-
-
-
                 }else{
                     message.error(data.message);
                 }
+            }, (error: ErrorEvent) => {
+                message.error(error.message);
+                loading.value = false;
             });
         }
 
