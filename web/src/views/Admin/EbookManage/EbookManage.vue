@@ -124,7 +124,6 @@ import { defineComponent, onMounted, ref, toRaw } from "vue";
 import { message } from "ant-design-vue";
 import axios from "axios";
 import { Tool } from "./../../../util/Tools";
-import { ColSize } from "ant-design-vue/lib/grid/Col";
 
 interface Ebook {
   category1Id: string;
