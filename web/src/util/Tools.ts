@@ -26,6 +26,15 @@ export class Tool {
             return JSON.parse(JSON.stringify(obj));
         }
     }
+    /**
+     * 对象复制
+     * @param obj
+     */
+     public static copy2(obj: any): any {
+        if (obj) {
+            return JSON.parse(JSON.stringify(obj));
+        }
+    }
 
     /**
    * 使用递归将数组转为树形结构
