@@ -31,13 +31,15 @@ public class ImoocDocService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BlogApplication.class);
 
-    public List<ImoocDocQueryResp> list(){
+    public List<ImoocDocQueryResp> list(long id){
 
         List<ImoocDoc> imoocDocList = new ArrayList<>();
 
         // 查询条件
         ImoocDocExample imoocDocExample = new ImoocDocExample();
-        // imoocDocExample.setOrderByClause("");
+        ImoocDocExample.Criteria criteria = imoocDocExample.createCriteria();
+        criteria.andEbookIdEqualTo(id);
+        imoocDocExample.setOrderByClause("sort asc");
 
         imoocDocList = imoocDocMapper.selectByExample(imoocDocExample);
 

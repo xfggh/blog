@@ -17,11 +17,11 @@ public class ImoocDocController {
     @Resource
     private ImoocDocService imoocDocService;
 
-    @GetMapping("/list")
-    public CommonResp<List<ImoocDocQueryResp>> list() {
+    @GetMapping("/list/{id}")
+    public CommonResp<List<ImoocDocQueryResp>> list(@PathVariable long id) {
         CommonResp<List<ImoocDocQueryResp>> commonResp = new CommonResp<>();
 
-        List<ImoocDocQueryResp> imoocDocQueryRespList = imoocDocService.list();
+        List<ImoocDocQueryResp> imoocDocQueryRespList = imoocDocService.list(id);
         commonResp.setContent(imoocDocQueryRespList);
 
         return commonResp;

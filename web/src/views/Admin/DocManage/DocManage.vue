@@ -38,26 +38,28 @@
         :confirm-loading="modalConfirmLoading"
     >
         <div class="editModal">
-            <a-form ref="DocRef" :model="Doc" labelAlign="right" :rules="rules"
+            <a-form ref="DocRef" :model="doc" labelAlign="right" :rules="rules"
                 @finishFailed="formFinishFailed"
             >
                 <a-form-item label="名称" name="name">
-                    <a-input v-model:value="Doc.name" />
+                    <a-input v-model:value="doc.name" />
                 </a-form-item>
 
                 <a-form-item label="父分类">
-                    <!-- <a-input v-model:value="Doc.parent" /> -->
-                    <a-select
-                        v-model:value="Doc.parent"
+                    <a-tree-select
+                        v-model:value="doc.parent"
                         style="width: 260px"
+                        :dropdown-style="{ maxHeight: '500px', overflow: 'auto' }"
+                        :tree-data="parentTreeData"
+                        placeholder="选择父分类"
+                        tree-default-expand-all
+                        :replaceFields="{children:'children', title:'name', key:'id', value: 'id' }"
                     >
-                        <a-select-option value="0">无</a-select-option>
-                        <a-select-option :disabled="item.id == Doc.parent || item.id == Doc.id" v-for="item in level1" :value="item.id" :key="item.id">{{ item.name }}</a-select-option>
-                    </a-select>
+                    </a-tree-select>
                 </a-form-item>
 
                 <a-form-item label="排序">
-                    <a-input v-model:value="Doc.sort" />
+                    <a-input v-model:value="doc.sort" />
                 </a-form-item>
             </a-form>
         </div>
@@ -66,13 +68,31 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, toRaw } from 'vue';
+import { useRoute } from 'vue-router'
 import { message } from 'ant-design-vue';
 import axios from 'axios';
 import { Tool } from "../../../util/Tools";
 
+// interface Doc {
+//     id: string,
+//     ebookId: string,
+//     parent: string,
+//     name: string,
+//     sort: string,
+//     viewCount: string,
+//     voteCount: string,
+// }
+
+let ebookId: any;
 export default defineComponent ({
     name: "DocManage",
     setup(){
+        // 打印路由信息
+        const route = useRoute();
+        console.log(toRaw(route));
+        console.log(toRaw(route.params));
+        console.log(toRaw(route.query));
+
         const columns = [
             {
                 title: '名称',
@@ -102,16 +122,19 @@ export default defineComponent ({
 
         // const docs = ref();
         const level1 = ref();
+        level1.value = [];
         const loading = ref(false);
 
-        
-        const handleQuery = () => {
-            getDocList()
-        }
+        const parentTreeData = ref();
+        parentTreeData.value = [];
 
-        const getDocList = () => {
+        const getDocList = (id: any) => {
+            console.log(Number(id));
+            if(!id || isNaN(Number(id))){
+                return ;
+            }
             loading.value = true
-            axios.get('/imoocDoc/list').then(res => {
+            axios.get(`/imoocDoc/list/${id}`).then(res => {
                 loading.value = false;
 
                 let data = res.data;
@@ -121,27 +144,63 @@ export default defineComponent ({
                     // console.log(docs.value);
 
                     level1.value = Tool.array2Tree(content, 0);
-                    // console.log(level1.value);
+                    parentTreeData.value = Tool.array2Tree(content, 0) || [];
 
-
-
+                    console.log(toRaw(parentTreeData.value));
+                    
+                    // 为选择树添加一个"无"
+                    parentTreeData.value.unshift({id: 0, name: '无'});
                 }else{
                     message.error(data.message);
                 }
             });
         }
 
+        /**
+         * 使用递归
+         * 当前节点 及 其子节点 设为 disabled
+         */
+        const setParentTreeDisabled = (arr: [], id: string) => {
+            for (let i = 0; i < arr.length; i++) {
+                const item: any = arr[i];
+
+                if(item.id === id){ // 将 它 及 它的子节点 全部设置为 不可用
+                    item.disabled = true;
+                    
+                    let children = item.children;
+                    if(Tool.isNotEmpty(children)){
+                        for (let j = 0; j < children.length; j++) {
+                            const child = children[j];
+                            setParentTreeDisabled(children, child.id);
+                        }
+                    }
+                }else{
+                    let children = item.children
+                    if(Tool.isNotEmpty(item.children)){
+                        setParentTreeDisabled(children, id);
+                    }
+                }
+                
+            }
+        }
 
         // 弹窗 编辑
         const modalVisible = ref(false);
 
         const addItem = () => {
+            doc.value = { ebookId };
+            parentTreeData.value = Tool.copy2(level1.value);
+            parentTreeData.value.unshift({id: 0, name: '无'});
+
             modalVisible.value = true;
         }
         const editItem = (record: any) => {
-            console.log(toRaw(record));
-            // Doc.value = JSON.parse(JSON.stringify(record));
-            Doc.value = Tool.copy(record);
+            doc.value = Tool.copy(record);
+
+            parentTreeData.value = Tool.copy(level1.value);
+            setParentTreeDisabled(parentTreeData.value, record.id);
+
+            parentTreeData.value.unshift({id: 0, name: '无'});
 
             modalVisible.value = true;
         }
@@ -149,7 +208,7 @@ export default defineComponent ({
             console.log('delete');
             axios.delete(`/imoocDoc/delete/${id}`).then(res => {
                 if(res.data.success){
-                    getDocList();
+                    getDocList(ebookId);
                 }
             })
         }
@@ -158,15 +217,15 @@ export default defineComponent ({
         const modalHandleOk = () => {
             DocRef.value.validate().then(() => {
                 modalConfirmLoading.value = true;
-                console.log(Doc.value);
-                axios.post('/imoocDoc/save', Doc.value).then(res => {
+                
+                axios.post('/imoocDoc/save', doc.value).then(res => {
 
                     let data = res.data;
                     if(data.success){
                         modalConfirmLoading.value = false;
                         modalVisible.value = false;
 
-                        getDocList();
+                        getDocList(ebookId);
 
                         DocRef.value.resetFields();
                     }else{
@@ -183,7 +242,7 @@ export default defineComponent ({
             console.log(error);
         }
 
-        const Doc = ref({});
+        const doc = ref({});
         const DocRef = ref();
         const rules = {
             name: [
@@ -193,18 +252,19 @@ export default defineComponent ({
 
 
         onMounted(() => {
-            getDocList();
+            ebookId = route.query.ebook;
+
+            getDocList(ebookId);
         })
 
         return {
             columns,
 
-            handleQuery,
-
             // docs,
             level1,
             loading,
             modalVisible,
+            parentTreeData,
 
             editItem,
             deleteItem,
@@ -212,7 +272,7 @@ export default defineComponent ({
 
             modalHandleOk,
             modalConfirmLoading,
-            Doc,
+            doc,
             DocRef,
             rules,
             formFinishFailed

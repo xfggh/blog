@@ -38,6 +38,9 @@
 
       <template #action="{ record }">
         <a-space size="small">
+          <router-link :to="'/admin/doc?ebook=' + record.id">
+            <a-button type="primary"> 管理 </a-button>
+          </router-link>
           <a-button type="primary" @click="editItem(record)"> 编辑 </a-button>
           <a-popconfirm
             title="确定删除此条记录吗？"
