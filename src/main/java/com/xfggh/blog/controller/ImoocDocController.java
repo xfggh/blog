@@ -34,10 +34,10 @@ public class ImoocDocController {
         return commonResp;
     }
 
-    @DeleteMapping("/delete/{id}")
-    public CommonResp delete(@PathVariable long id){
+    @DeleteMapping("/delete/{ids}")
+    public CommonResp delete(@PathVariable String ids){
         CommonResp commonResp = new CommonResp();
-        imoocDocService.delete(id);
+        imoocDocService.delete(ids);
         return commonResp;
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -72,8 +73,14 @@ public class ImoocDocService {
         return commonResp;
     }
 
-    public void delete(long id){
-        imoocDocMapper.deleteByPrimaryKey(id);
+    public void delete(String ids){
+        List idList = Arrays.asList(ids.split(","));
+
+        ImoocDocExample imoocDocExample = new ImoocDocExample();
+        ImoocDocExample.Criteria criteria = imoocDocExample.createCriteria();
+        criteria.andIdIn(idList);
+
+        imoocDocMapper.deleteByExample(imoocDocExample);
     }
 
 

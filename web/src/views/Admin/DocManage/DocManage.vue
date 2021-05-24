@@ -184,6 +184,35 @@ export default defineComponent ({
             }
         }
 
+        /**
+         * 使用递归
+         * @param arr 数组
+         * @param id 要删除的 顶级 id 
+         */
+        const getDeleteIds = (arr: [], id: string, ids: string[]) => {
+            for (let i = 0; i < arr.length; i++) {
+                const item: any = arr[i];
+
+                if(item.id === id){ // 将 它 及 它的子节点 全部设置为 不可用
+                    ids.push(id);
+                    
+                    let children = item.children;
+                    if(Tool.isNotEmpty(children)){
+                        for (let j = 0; j < children.length; j++) {
+                            const child = children[j];
+                            getDeleteIds(children, child.id, ids);
+                        }
+                    }
+                }else{
+                    let children = item.children
+                    if(Tool.isNotEmpty(item.children)){
+                        getDeleteIds(children, id, ids);
+                    }
+                }
+                
+            }
+        }
+
         // 弹窗 编辑
         const modalVisible = ref(false);
 
@@ -204,9 +233,14 @@ export default defineComponent ({
 
             modalVisible.value = true;
         }
+        
+        let deleteIds: Array<string> = [];
         const deleteItem = (id: any) => {
-            console.log('delete');
-            axios.delete(`/imoocDoc/delete/${id}`).then(res => {
+            deleteIds = [];
+            getDeleteIds(parentTreeData.value, id, deleteIds);
+            console.log(deleteIds);
+
+            axios.delete(`/imoocDoc/delete/${deleteIds}`).then(res => {
                 if(res.data.success){
                     getDocList(ebookId);
                 }
