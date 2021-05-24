@@ -61,6 +61,10 @@
                 <a-form-item label="排序">
                     <a-input v-model:value="doc.sort" />
                 </a-form-item>
+
+                <a-form-item label="内容">
+                    <div id="content"></div>
+                </a-form-item>
             </a-form>
         </div>
     </a-modal>
@@ -73,6 +77,8 @@ import { message, Modal } from 'ant-design-vue';
 import axios from 'axios';
 import { Tool } from "../../../util/Tools";
 import ExclamationCircleOutlined from '@ant-design/icons-vue/ExclamationCircleOutlined'
+
+import E from "wangeditor"
 
 // interface Doc {
 //     id: string,
@@ -199,13 +205,17 @@ export default defineComponent ({
         }
         const editItem = (record: any) => {
             doc.value = Tool.copy(record);
-
             parentTreeData.value = Tool.copy(level1.value);
             setParentTreeDisabled(parentTreeData.value, record.id);
 
             parentTreeData.value.unshift({id: 0, name: '无'});
 
             modalVisible.value = true;
+
+            setTimeout(() => {
+                const editor = new E("#content")
+                editor.create()
+            })
         }
         
         let deleteIds: Array<string> = [];
