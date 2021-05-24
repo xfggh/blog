@@ -1,73 +1,76 @@
 <template>
     <div class="doc-manage">
         <div class="add-btn">
-            <a-button type="primary" @click="addItem">新增</a-button>
+            <a-space>
+                <a-button type="primary" @click="addItem">新增</a-button>
+                <a-button type="primary" @click="saveItem">{{ saveType }}保存</a-button>
+            </a-space>
         </div>
 
-        <a-table 
-            :dataSource="level1" 
-            :columns="columns"
-            :row-key="record => record.id"
-            :pagination="false"
-            :loading="loading"
-        >
-
-            <template #action="{ record }">
-                <a-space size="small">
-                    <a-button type="primary" @click="editItem(record)">
-                        编辑
-                    </a-button>
-                    <a-popconfirm
-                        title="确定删除此条记录吗？"
-                        ok-text="是"
-                        cancel-text="否"
-                        @confirm="deleteItem(record.id)"
+        <a-row :gutter="24">
+            <a-col :span="8">
+                <a-table 
+                    :dataSource="level1" 
+                    :columns="columns"
+                    :row-key="record => record.id"
+                    :pagination="false"
+                    :loading="loading"
+                >
+                    <template #action="{ record }">
+                        <a-space size="small">
+                            <a-button size="small" type="primary" @click="editItem(record)">
+                                编辑
+                            </a-button>
+                            <a-popconfirm
+                                title="确定删除此条记录吗？"
+                                ok-text="是"
+                                cancel-text="否"
+                                @confirm="deleteItem(record.id)"
+                            >
+                                <a-button size="small" type="danger">
+                                    删除
+                                </a-button>
+                            </a-popconfirm>
+                        </a-space>
+                    </template>
+                </a-table>
+            </a-col>
+            <a-col :span="16">
+                <div class="editModal">
+                    <a-form ref="docRef" :model="doc" labelAlign="right" :rules="rules"
+                        @finishFailed="formFinishFailed"
+                        layout="vertical"
                     >
-                        <a-button type="danger">
-                            删除
-                        </a-button>
-                    </a-popconfirm>
-                </a-space>
-            </template>
+                        <a-form-item name="name">
+                            <a-input v-model:value="doc.name" />
+                        </a-form-item>
 
-        </a-table>
+                        <a-form-item name="parent">
+                            <a-tree-select
+                                v-model:value="doc.parent"
+                                :dropdown-style="{ maxHeight: '500px', overflow: 'auto' }"
+                                :tree-data="parentTreeData"
+                                placeholder="选择父分类"
+                                tree-default-expand-all
+                                :replaceFields="{children:'children', title:'name', key:'id', value: 'id' }"
+                            >
+                            </a-tree-select>
+                        </a-form-item>
+
+                        <a-form-item name="sort">
+                            <a-input v-model:value="doc.sort" />
+                        </a-form-item>
+
+                        <a-form-item>
+                            <div id="content"></div>
+                        </a-form-item>
+                    </a-form>
+                </div>
+            </a-col>
+        </a-row>
+
+        
     </div>
-
-    <a-modal v-model:visible="modalVisible" title="编辑" @ok="modalHandleOk"
-        cancelText="取消" okText="确定"
-        :confirm-loading="modalConfirmLoading"
-    >
-        <div class="editModal">
-            <a-form ref="DocRef" :model="doc" labelAlign="right" :rules="rules"
-                @finishFailed="formFinishFailed"
-            >
-                <a-form-item label="名称" name="name">
-                    <a-input v-model:value="doc.name" />
-                </a-form-item>
-
-                <a-form-item label="父分类">
-                    <a-tree-select
-                        v-model:value="doc.parent"
-                        style="width: 260px"
-                        :dropdown-style="{ maxHeight: '500px', overflow: 'auto' }"
-                        :tree-data="parentTreeData"
-                        placeholder="选择父分类"
-                        tree-default-expand-all
-                        :replaceFields="{children:'children', title:'name', key:'id', value: 'id' }"
-                    >
-                    </a-tree-select>
-                </a-form-item>
-
-                <a-form-item label="排序">
-                    <a-input v-model:value="doc.sort" />
-                </a-form-item>
-
-                <a-form-item label="内容">
-                    <div id="content"></div>
-                </a-form-item>
-            </a-form>
-        </div>
-    </a-modal>
 </template>
 
 <script lang="ts">
@@ -105,22 +108,22 @@ export default defineComponent ({
                 title: '名称',
                 dataIndex: 'name'
             },
-            {
-                title: '父分类',
-                dataIndex: 'parent'
-            },
-            {
-                title: '顺序',
-                dataIndex: 'sort'
-            },
-            {
-                title: '点赞数',
-                dataIndex: 'voteCount'
-            },
-            {
-                title: '阅读数',
-                dataIndex: 'viewCount'
-            },
+            // {
+            //     title: '父分类',
+            //     dataIndex: 'parent'
+            // },
+            // {
+            //     title: '顺序',
+            //     dataIndex: 'sort'
+            // },
+            // {
+            //     title: '点赞数',
+            //     dataIndex: 'voteCount'
+            // },
+            // {
+            //     title: '阅读数',
+            //     dataIndex: 'viewCount'
+            // },
             {
                 title: 'Action',
                 slots: { customRender: 'action' }
@@ -156,7 +159,7 @@ export default defineComponent ({
                     console.log(toRaw(parentTreeData.value));
                     
                     // 为选择树添加一个"无"
-                    parentTreeData.value.unshift({id: 0, name: '无'});
+                    parentTreeData.value.unshift({id: '0', name: '无'});
                 }else{
                     message.error(data.message);
                 }
@@ -191,31 +194,22 @@ export default defineComponent ({
             }
         }
 
-        
-
         // 弹窗 编辑
-        const modalVisible = ref(false);
-
         const addItem = () => {
-            doc.value = { ebookId };
-            parentTreeData.value = Tool.copy2(level1.value);
-            parentTreeData.value.unshift({id: 0, name: '无'});
+            docRef.value.resetFields();
+            saveType.value = '新增';
 
-            modalVisible.value = true;
+            parentTreeData.value = Tool.copy2(level1.value);
+            parentTreeData.value.unshift({id: '0', name: '无'});
         }
         const editItem = (record: any) => {
+            saveType.value = record.name + ' 编辑';
+
             doc.value = Tool.copy(record);
             parentTreeData.value = Tool.copy(level1.value);
             setParentTreeDisabled(parentTreeData.value, record.id);
 
-            parentTreeData.value.unshift({id: 0, name: '无'});
-
-            modalVisible.value = true;
-
-            setTimeout(() => {
-                const editor = new E("#content")
-                editor.create()
-            })
+            parentTreeData.value.unshift({id: '0', name: '无'});
         }
         
         let deleteIds: Array<string> = [];
@@ -274,24 +268,20 @@ export default defineComponent ({
             });
         }
 
-        const modalConfirmLoading = ref(false);
-        const modalHandleOk = () => {
-            DocRef.value.validate().then(() => {
-                modalConfirmLoading.value = true;
-                
+        const saveType = ref('新增');
+        const saveItem = () => {
+            doc.value.ebookId = ebookId;
+
+            docRef.value.validate().then(() => {
                 axios.post('/imoocDoc/save', doc.value).then(res => {
 
                     let data = res.data;
                     if(data.success){
-                        modalConfirmLoading.value = false;
-                        modalVisible.value = false;
-
                         getDocList(ebookId);
 
-                        DocRef.value.resetFields();
+                        docRef.value.resetFields();
                     }else{
                         message.error(data.message);
-                        modalConfirmLoading.value = false;
                     }
                 })
             }).catch((error: any) => {
@@ -303,19 +293,32 @@ export default defineComponent ({
             console.log(error);
         }
 
-        const doc = ref({});
-        const DocRef = ref();
+        const doc = ref();
+        doc.value = {};
+        const docRef = ref();
         const rules = {
             name: [
-                { required: true, message: '名称不能为空', trigger: 'blur' },
+                { required: true, message: '名称不能为空', trigger: 'change' },
             ],
+            parent: [
+                { required: true, message: '父分类不能为空', trigger: 'change' },
+            ],
+            sort: [
+                { required: true, message: '排序不能为空', trigger: 'change' },
+            ]
+
         };
 
-
+        
         onMounted(() => {
+            // 获取 电子书 的 id
             ebookId = route.query.ebook;
-
+            // 初始化 文档列表
             getDocList(ebookId);
+            // 初始化 wangEditor
+            const editor = new E("#content");
+            editor.config.zIndex = 1;
+            editor.create();
         })
 
         return {
@@ -324,17 +327,16 @@ export default defineComponent ({
             // docs,
             level1,
             loading,
-            modalVisible,
             parentTreeData,
 
             editItem,
             deleteItem,
             addItem,
+            saveItem,
+            saveType,
 
-            modalHandleOk,
-            modalConfirmLoading,
             doc,
-            DocRef,
+            docRef,
             rules,
             formFinishFailed
         }
@@ -367,7 +369,7 @@ export default defineComponent ({
         margin-right: 20px;
     }
     .ant-input{
-        width: 260px;
+        width: 100%;
     }
 }
 
