@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import Home from './../views/Home/Home.vue'
+import Doc from './../views/Doc.vue'
 
 import Tools from './../views/Tools/Tools.vue'
 import Hash from './../views/Tools/pages/Hash.vue'
@@ -16,6 +17,7 @@ import DocManage from './../views/Admin/DocManage/DocManage.vue'
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', name: 'Home', component: Home },
+  { path: '/doc', name: 'Doc', component: Doc },
   {
     path: '/tools', name: 'Tools', component: Tools, 
     children: [ // 这个地方好像不用路由：使用 v-show 显示
