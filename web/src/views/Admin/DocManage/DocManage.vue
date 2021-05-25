@@ -199,6 +199,7 @@ export default defineComponent ({
         // 弹窗 编辑
         const addItem = () => {
             docRef.value.resetFields();
+            editor.txt.html('');
             saveType.value = '新增';
 
             parentTreeData.value = Tool.copy2(level1.value);
@@ -206,12 +207,24 @@ export default defineComponent ({
         }
         const editItem = (record: any) => {
             saveType.value = record.name + ' 编辑';
+            docRef.value.resetFields();
+            editor.txt.html('');
+
+            // 根据 id 查找内容
+            getContent(record.id);
 
             doc.value = Tool.copy(record);
             parentTreeData.value = Tool.copy(level1.value);
             setParentTreeDisabled(parentTreeData.value, record.id);
 
             parentTreeData.value.unshift({id: '0', name: '无'});
+        }
+        const getContent = (id: any) => {
+            axios.get(`/imoocDoc/content/${id}`).then(res => {
+                if(res.data.success){
+                    editor.txt.html(res.data.content);
+                }
+            })
         }
         
         let deleteIds: Array<string> = [];

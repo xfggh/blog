@@ -40,4 +40,14 @@ public class ImoocDocController {
         imoocDocService.delete(ids);
         return commonResp;
     }
+
+    @GetMapping("/content/{id}")
+    public CommonResp getContent(@PathVariable long id){
+        CommonResp commonResp = new CommonResp();
+
+        String content = imoocDocService.getContent(id);
+        commonResp.setContent(content);
+        return commonResp;
+    }
+
 }

@@ -96,5 +96,11 @@ public class ImoocDocService {
         imoocDocMapper.deleteByExample(imoocDocExample);
     }
 
+    // 根据 id 查找 文档内容
+    public String getContent(long id){
+        ImoocContent imoocContent = imoocContentMapper.selectByPrimaryKey(id);
+
+        return imoocContent.getContent();
+    }
 
 }
