@@ -5,7 +5,7 @@
       <the-header></the-header>
     </a-affix>
 
-    <router-view/>
+    <router-view style="min-height: 550px;" />
     
     <the-footer></the-footer>
   </div>

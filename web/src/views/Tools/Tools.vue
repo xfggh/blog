@@ -106,7 +106,6 @@ export default defineComponent ({
 
 <style lang="scss">
 .tools{
-    min-height: 600px;
     width: 100%;
     display: flex;
     .tools-menu{

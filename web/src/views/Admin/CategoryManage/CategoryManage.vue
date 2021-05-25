@@ -213,7 +213,6 @@ export default defineComponent ({
 
 <style lang="scss" scoped>
 .admin{
-    min-height: 600px;
     padding: 20px;
 
     .add-btn{

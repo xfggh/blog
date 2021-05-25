@@ -159,7 +159,6 @@ export default defineComponent({
 <style lang="scss">
 .home{
     // margin-top: 16px;
-    min-height: 600px;
     display: flex;
     // padding-top: 16px;
     
