@@ -10,11 +10,13 @@
         <a-row :gutter="24">
             <a-col :span="8">
                 <a-table 
+                    v-if="level1.length > 0"
                     :dataSource="level1" 
                     :columns="columns"
                     :row-key="record => record.id"
                     :pagination="false"
                     :loading="loading"
+                    :defaultExpandAllRows="true"
                 >
                     <template #action="{ record }">
                         <a-space size="small">
@@ -271,6 +273,7 @@ export default defineComponent ({
         const saveType = ref('新增');
         const saveItem = () => {
             doc.value.ebookId = ebookId;
+            doc.value.content = editor.txt.html();
 
             docRef.value.validate().then(() => {
                 axios.post('/imoocDoc/save', doc.value).then(res => {
@@ -279,7 +282,12 @@ export default defineComponent ({
                     if(data.success){
                         getDocList(ebookId);
 
+                        Modal.success({
+                            // title: 'success',
+                            content: 'save success'
+                        })
                         docRef.value.resetFields();
+                        editor.txt.html('');
                     }else{
                         message.error(data.message);
                     }
@@ -304,19 +312,19 @@ export default defineComponent ({
                 { required: true, message: '父分类不能为空', trigger: 'change' },
             ],
             sort: [
-                { required: true, message: '排序不能为空', trigger: 'change' },
+                { required: true, type: 'number', message: '排序不能为空', trigger: 'change' },
             ]
 
         };
 
-        
+        let editor:any;
         onMounted(() => {
             // 获取 电子书 的 id
             ebookId = route.query.ebook;
             // 初始化 文档列表
             getDocList(ebookId);
             // 初始化 wangEditor
-            const editor = new E("#content");
+            editor = new E("#content");
             editor.config.zIndex = 1;
             editor.create();
         })
