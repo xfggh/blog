@@ -11,6 +11,7 @@ import Writing from './../views/Tools/pages/Writing.vue'
 import KeyBoard from './../views/Tools/pages/KeyBoard.vue'
 
 import Admin from './../views/Admin/Admin.vue'
+import User from './../views/Admin/UserManage/UserManage.vue'
 import EbookManage from './../views/Admin/EbookManage/EbookManage.vue'
 import CategoryManage from './../views/Admin/CategoryManage/CategoryManage.vue'
 import DocManage from './../views/Admin/DocManage/DocManage.vue'
@@ -31,6 +32,7 @@ const routes: Array<RouteRecordRaw> = [
   { 
     path: '/admin', name: 'Admin', component: Admin,
     children: [
+      { path: 'user', name: 'User', component: User },
       { path: 'ebook-manage', name: 'EbookManage', component: EbookManage },
       { path: 'category', name: 'CategoryManage', component: CategoryManage },
       { path: 'doc', name: 'DocManage', component: DocManage },

@@ -11,6 +11,7 @@
             <a-menu-item key="/tools">tools</a-menu-item>
             <a-menu-item key="/admin">电子书管理</a-menu-item>
             <a-menu-item key="/admin/category">分类管理</a-menu-item>
+            <a-menu-item key="/admin/user">用户管理</a-menu-item>
         </a-menu>
     </div>
 </template>
