@@ -25,6 +25,8 @@
                         connectionURL="jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Shanghai"
                         userId="blog"
                         password="root">
+            <!-- 解决 同名表 的问题 -->
+            <property name="nullCatalogMeansCurrent" value="true" />
         </jdbcConnection>
 
         <!-- 实体 类的位置 -->
