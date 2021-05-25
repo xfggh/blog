@@ -98,9 +98,12 @@ public class ImoocDocService {
 
     // 根据 id 查找 文档内容
     public String getContent(long id){
+        String result = "";
         ImoocContent imoocContent = imoocContentMapper.selectByPrimaryKey(id);
-
-        return imoocContent.getContent();
+        if(!ObjectUtils.isEmpty(imoocContent)){
+            result = imoocContent.getContent();
+        }
+        return result;
     }
 
 }
