@@ -14,7 +14,7 @@
 			</a-col>
 
 			<a-col :span="18" class="doc-content">
-				<div :innerHTML="contentHtml"></div>
+				<div class="wangeditor" :innerHTML="contentHtml"></div>
 			</a-col>
 
 		</a-row>
@@ -89,7 +89,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .doc{
 	padding: 20px 20px;
 	.doc-nav{
@@ -97,12 +97,8 @@ export default defineComponent({
 	}
 	.doc-content{
 		padding-left: 16px;
-		div{
-			width: 100%;
-			height: 100%;
-			background-color: #fafafa;
-		}
-		
 	}
+
+	
 }
 </style>

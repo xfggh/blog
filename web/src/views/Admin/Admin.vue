@@ -15,5 +15,8 @@ export default defineComponent ({
 </script>
 
 <style lang="scss">
+.admin{
+    padding: 20px;
+}
 
 </style>
