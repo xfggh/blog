@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.xfggh.blog.BlogApplication;
 import com.xfggh.blog.entity.User;
 import com.xfggh.blog.entity.UserExample;
+import com.xfggh.blog.exception.BusinessException;
+import com.xfggh.blog.exception.BusinessExceptionCode;
 import com.xfggh.blog.mapper.UserMapper;
 import com.xfggh.blog.req.UserQueryReq;
 import com.xfggh.blog.req.UserSaveReq;
@@ -16,6 +18,7 @@ import com.xfggh.blog.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -68,10 +71,16 @@ public class UserService {
         User user = CopyUtil.copy(userSaveReq, User.class);
 
         if(ObjectUtils.isEmpty(userSaveReq.getId())){
-            user.setId(snowFlake.nextId());
-            userMapper.insert(user);
+            // 查询 用户名 是否已存在
+            if(ObjectUtils.isEmpty(getUserByLoginName(userSaveReq.getLoginName()))){
+                user.setId(snowFlake.nextId());
+                userMapper.insert(user);
+            }else{
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
+            }
         }else{
-            userMapper.updateByPrimaryKey(user);
+            user.setLoginName(null);
+            userMapper.updateByPrimaryKeySelective(user);
         }
 
         return commonResp;
@@ -82,4 +91,18 @@ public class UserService {
     }
 
 
+    private User getUserByLoginName(String loginName){
+        User user = null;
+
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria =  userExample.createCriteria();
+        criteria.andLoginNameEqualTo(loginName);
+
+        List<User> userList = userMapper.selectByExample(userExample);
+        if(!CollectionUtils.isEmpty(userList)){
+            user = userList.get(0);
+        }
+
+        return user;
+    }
 }

@@ -64,7 +64,7 @@
         @finishFailed="formFinishFailed"
       >
         <a-form-item label="用户名" name="loginName">
-          <a-input v-model:value="user.loginName" />
+          <a-input v-model:value="user.loginName" :disabled="!!user.id" />
         </a-form-item>
 
         <a-form-item label="昵称" name="username">
