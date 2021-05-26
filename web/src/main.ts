@@ -10,6 +10,9 @@ import 'ant-design-vue/dist/antd.css';
 // 全局引入 图标文件
 import * as Icons from '@ant-design/icons-vue';
 
+// 引入全局样式文件
+import '@/assets/css/style.scss';
+
 import axios from 'axios';
 axios.defaults.baseURL = process.env.VUE_APP_SERVER;
 
