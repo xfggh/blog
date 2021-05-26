@@ -1,12 +1,5 @@
 <template>
     <div class="doc-manage">
-        <div class="add-btn">
-            <a-space>
-                <a-button type="primary" @click="addItem">新增</a-button>
-                <a-button type="primary" @click="saveItem">{{ saveType }}保存</a-button>
-            </a-space>
-        </div>
-
         <a-row :gutter="24">
             <a-col :span="8">
                 <a-table 
@@ -39,6 +32,14 @@
             </a-col>
             <a-col :span="16">
                 <div class="editModal">
+                    <div class="add-btn">
+                        <a-space>
+                            <a-button type="primary" @click="addItem">新增</a-button>
+                            <a-button type="primary" @click="saveItem">{{ saveType }}保存</a-button>
+                        </a-space>
+                        <a-button type="primary" @click="contentPreview"><EyeOutlined />内容预览</a-button>
+                    </div>
+
                     <a-form ref="docRef" :model="doc" labelAlign="right" :rules="rules"
                         @finishFailed="formFinishFailed"
                         layout="vertical"
@@ -60,7 +61,7 @@
                         </a-form-item>
 
                         <a-form-item name="sort">
-                            <a-input v-model:value="doc.sort" />
+                            <a-input type="number" v-model:value="doc.sort" />
                         </a-form-item>
 
                         <a-form-item>
@@ -71,7 +72,15 @@
             </a-col>
         </a-row>
 
-        
+        <a-drawer
+            title="内容预览"
+            placement="right"
+            :closable="true"
+            v-model:visible="drawerVisible"
+            width="900"
+        >
+            <div class="wangeditor" :innerHTML="previewHtml"></div>
+        </a-drawer>
     </div>
 </template>
 
@@ -325,10 +334,18 @@ export default defineComponent ({
                 { required: true, message: '父分类不能为空', trigger: 'change' },
             ],
             sort: [
-                { required: true, type: 'number', message: '排序不能为空', trigger: 'change' },
+                { required: true, type: 'number', transform: (val: any) => Number(val) , message: '排序不能为空', trigger: 'change' },
             ]
 
         };
+
+        // 内容预览功能
+        const drawerVisible = ref(false);
+        const previewHtml = ref();
+        const contentPreview = () => {
+            previewHtml.value = editor.txt.html();
+            drawerVisible.value = true;
+        }
 
         let editor:any;
         onMounted(() => {
@@ -359,38 +376,44 @@ export default defineComponent ({
             doc,
             docRef,
             rules,
-            formFinishFailed
+            formFinishFailed,
+
+            contentPreview,
+            drawerVisible,
+            previewHtml
         }
     }
 })
 </script>
 
-<style lang="scss">
-.admin{
-    padding: 20px;
-
-    .add-btn{
+<style lang="scss" scoped>
+.doc-manage{
+    .editModal{
         display: flex;
-        margin-bottom: 20px;
-        align-items: center;
-        justify-content: flex-end;
+        flex-direction: column;
+        justify-content: center;
+
+        .add-btn{
+            display: flex;
+            margin-bottom: 20px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ant-form-item{
+            margin-bottom: 10px;
+        }
+        .ant-form-item-label{
+            width: 56px;
+            margin-right: 20px;
+        }
+        .ant-input{
+            width: 100%;
+        }
     }
+
 }
 
-.editModal{
-    display: flex;
-    justify-content: center;
 
-    .ant-form-item{
-        margin-bottom: 10px;
-    }
-    .ant-form-item-label{
-        width: 56px;
-        margin-right: 20px;
-    }
-    .ant-input{
-        width: 100%;
-    }
-}
 
 </style>
