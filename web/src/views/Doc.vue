@@ -1,6 +1,6 @@
 <template>
   <div class="doc">
-		<a-row>
+		<a-row v-if="level1.length > 0">
 			<a-col :span="6" class="doc-nav">
 				<a-tree
 					v-model:selectedKeys="selectedKeys"
@@ -18,11 +18,13 @@
 			</a-col>
 
 		</a-row>
+
+    <a-empty v-if="level1.length <= 0" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, toRaw } from "vue";
 import axios from "axios";
 import { Tool } from "../util/Tools";
 import { message } from "ant-design-vue";
@@ -36,18 +38,25 @@ export default defineComponent({
     const level1 = ref();
     level1.value = [];
 
-    const getDocList = (id: any) => {
-      console.log(Number(id));
-      if (!id || isNaN(Number(id))) {
+    const getDocList = (ebookId: any) => {
+      console.log(Number(ebookId));
+      if (!ebookId || isNaN(Number(ebookId))) {
         return;
       }
 
-      axios.get(`/imoocDoc/list/${id}`).then((res) => {
+      axios.get(`/imoocDoc/list/${ebookId}`).then((res) => {
         let data = res.data;
         if (data.success) {
           let content = res.data.content;
 
           level1.value = Tool.array2Tree(content, 0);
+          
+          if(level1.value.length > 0){
+            let id = level1.value[0].id
+            selectedKeys.value = [id];
+            getContent(id);
+          }
+          
         } else {
           message.error(data.message);
         }
@@ -55,6 +64,7 @@ export default defineComponent({
     };
 
 		const selectedKeys = ref();
+    selectedKeys.value = [];
 		let contentHtml = ref();
     const selectItem = (selectedKeys: any) => {
 			console.log(selectedKeys);
