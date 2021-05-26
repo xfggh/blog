@@ -50,6 +50,7 @@
     v-model:visible="modalVisible"
     title="编辑"
     @ok="modalHandleOk"
+    @cancel="modalHandleCancel"
     cancelText="取消"
     okText="确定"
     :confirm-loading="modalConfirmLoading"
@@ -79,7 +80,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, toRaw } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { message } from "ant-design-vue";
 import axios from "axios";
 import { Tool } from "./../../../util/Tools";
@@ -233,6 +234,9 @@ export default defineComponent({
           console.log("error", error);
         });
     };
+    const modalHandleCancel= () => {
+      userRef.value.resetFields();
+    }
 
 
     const formFinishFailed = (error: any) => {
@@ -285,7 +289,7 @@ export default defineComponent({
       addItem,
 
       modalHandleOk,
-      // modalHandleCancel,
+      modalHandleCancel,
       modalConfirmLoading,
       user,
       userRef,

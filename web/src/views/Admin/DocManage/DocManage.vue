@@ -399,19 +399,7 @@ export default defineComponent ({
             align-items: center;
             justify-content: space-between;
         }
-
-        .ant-form-item{
-            margin-bottom: 10px;
-        }
-        .ant-form-item-label{
-            width: 56px;
-            margin-right: 20px;
-        }
-        .ant-input{
-            width: 100%;
-        }
     }
-
 }
 
 
